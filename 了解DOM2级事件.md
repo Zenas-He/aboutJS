@@ -44,3 +44,5 @@ DOM0级事件中用<code>onclick</code>来定义事件函数，而在事件流�
 
 事件捕获和事件冒泡可以通过<code>stopPropagation</code>函数阻止事件流的进一步执行，而<code>preventDefault</code>可以阻止元素默认事件的执行。
 
+**参考**  
+[DOM2级事件](https://www.w3.org/TR/DOM-Level-2-Events/events.html)
