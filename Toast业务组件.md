@@ -140,7 +140,91 @@ export default {
 
 通过函数组件把自定义内容通过render函数的形式传递到组件中进行渲染。如果没有传render函数，允许使用者传入静态标签或者文字进行渲染。
 
+``` javascript
+// toast.js
+import Toast from './toast.vue'
+import Vue from 'vue'
+
+Toast.newInstance = properties => {
+  const _props = properties || {}
+
+  const Instance = new Vue({
+    render (h) {
+      return h(ZToast, {
+        props: _props
+      })
+    }
+  })
+
+  const component = Instance.$mount()
+  document.body.appendChild(component.$el)
+  const Toast = component.$children[0]
+
+  return {
+    share: {
+      add (shareInfo) {
+        Toast.addShare(shareInfo)
+      },
+      remove () {
+        Toast.close('share')
+      },
+      component: Toast,
+    },
+    ['download-tip']: { ... },
+    destroy (element) {
+      Toast.closeAll()
+      setTimeout(() => {
+        document.body.removeChild(document.getElementsByClassName(element)[0])
+      }, 300)
+    }
+  }
+}
+
+export default Toast
+```
+``` javascript
+// index.js
+import Toast from './toast'
+
+let ToastInstance
+
+function getToastInstance () {
+  ToastInstance = ToastInstance || Toast.newInstance({})
+  return instance
+}
+
+function toast (type, options) {
+  // properties ...
+  let instance = getToastInstance()
+
+  instance[type] && instance[type].add({
+    // properties ...
+  })
+}
+
+export default {
+  share (options) {
+    return toast('share', options)
+  },
+  downloadTip (options) {
+    return toast('download-tip', options)
+  }
+  closeShare () {
+    if (ToastInstance) {
+      ToastInstance.Share.remove()
+    }
+  },
+  closeDownloadTip () { ... },
+  destroy () {
+    let instance = ToastInstance
+    ToastInstance = null
+    instance.destroy(prefixCls)
+  }
+}
+
+```
+对写好了的Toast组件进行挂载，并且对外暴露接口，给使用者类原生alert的体验。
 
 #### PS
-- 弹窗组件作为一个单例，既可以直接在引入时执行，也可以在调用时执行。
-- 单例模式可以用`proxy`和`Reflect.construct(target, args)`来实现。
+弹窗组件作为一个单例，既可以直接在引入时执行，也可以在调用时执行。  
+单例模式可以用`proxy`和`Reflect.construct(target, args)`来实现。
