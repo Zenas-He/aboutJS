@@ -1,3 +1,5 @@
+有误，待修改。
+
 &emsp;<code>mounted</code>钩子函数是由<code>core/vdom/patch.js</code>的<code>createPatchFunction</code>函数返回的<code>patch</code>函数调用的。其中最简单的逻辑是在页面初始化时渲染原生节点(appendChild)之后调用<code>vonde</code>的<code>insert</code>钩子调用<code>mounted</code>。  
 &emsp;<code>mounted</code>钩子主要用于获取已渲染的元素的属性，而什么时候才能拿到元素的属性，在<code>appendChild</code>之后立即调用<code>mounted</code>钩子会不会元素还没有渲染好呢？  
 &emsp;这就要涉及到浏览器的重绘和重排了，当页面上的元素被修改之后，会进行重绘、重排，如果去获取元素的属性，JS线程会被渲染线程阻塞，在浏览器完成重绘、重排之后获取属性的值，并继续执行js代码。  
